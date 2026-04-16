@@ -1,0 +1,122 @@
+[
+    {
+        "firstName": "Ethan",
+        "lastName": "Reid",
+        "position": "C",
+        "jerseyNumber": 91,
+        "dateOfBirth": "1997-03-14",
+        "teamId": "692ceab9a2cd8b1fb727e1a8"
+    },
+    {
+        "firstName": "Logan",
+        "lastName": "Bishop",
+        "position": "RW",
+        "jerseyNumber": 12,
+        "dateOfBirth": "1996-11-02",
+        "teamId": "692ceab9a2cd8b1fb727e1a8"
+    },
+    {
+        "firstName": "Marcus",
+        "lastName": "Lee",
+        "position": "LW",
+        "jerseyNumber": 21,
+        "dateOfBirth": "1998-07-19",
+        "teamId": "692ceab9a2cd8b1fb727e1a8"
+    },
+    {
+        "firstName": "Oliver",
+        "lastName": "Hayes",
+        "position": "D",
+        "jerseyNumber": 44,
+        "dateOfBirth": "1995-02-08",
+        "teamId": "692ceab9a2cd8b1fb727e1a8"
+    },
+    {
+        "firstName": "Noah",
+        "lastName": "Turner",
+        "position": "G",
+        "jerseyNumber": 35,
+        "dateOfBirth": "1999-10-30",
+        "teamId": "692ceab9a2cd8b1fb727e1a8"
+    },
+    {
+        "firstName": "Caleb",
+        "lastName": "Morris",
+        "position": "C",
+        "jerseyNumber": 97,
+        "dateOfBirth": "1997-01-13",
+        "teamId": "692cee1ba2cd8b1fb727e1b7"
+    },
+    {
+        "firstName": "Riley",
+        "lastName": "Foster",
+        "position": "RW",
+        "jerseyNumber": 11,
+        "dateOfBirth": "1995-09-05",
+        "teamId": "692cee1ba2cd8b1fb727e1b7"
+    },
+    {
+        "firstName": "Dylan",
+        "lastName": "Santos",
+        "position": "D",
+        "jerseyNumber": 2,
+        "dateOfBirth": "1998-06-22",
+        "teamId": "692cee1ba2cd8b1fb727e1b7"
+    },
+    {
+        "firstName": "Jordan",
+        "lastName": "Price",
+        "position": "LW",
+        "jerseyNumber": 29,
+        "dateOfBirth": "1996-12-17",
+        "teamId": "692cee1ba2cd8b1fb727e1b7"
+    },
+    {
+        "firstName": "Tyler",
+        "lastName": "Grant",
+        "position": "G",
+        "jerseyNumber": 33,
+        "dateOfBirth": "1994-04-21",
+        "teamId": "692cee1ba2cd8b1fb727e1b7"
+    },
+    {
+        "firstName": "Alex",
+        "lastName": "Dawson",
+        "position": "C",
+        "jerseyNumber": 14,
+        "dateOfBirth": "2000-08-03",
+        "teamId": "692cee1ba2cd8b1fb727e1b8"
+    },
+    {
+        "firstName": "Samuel",
+        "lastName": "Vargas",
+        "position": "RW",
+        "jerseyNumber": 26,
+        "dateOfBirth": "1999-04-11",
+        "teamId": "692cee1ba2cd8b1fb727e1b8"
+    },
+    {
+        "firstName": "Elliot",
+        "lastName": "Moreau",
+        "position": "LW",
+        "jerseyNumber": 77,
+        "dateOfBirth": "1998-09-29",
+        "teamId": "692cee1ba2cd8b1fb727e1b8"
+    },
+    {
+        "firstName": "Victor",
+        "lastName": "Lefevre",
+        "position": "D",
+        "jerseyNumber": 6,
+        "dateOfBirth": "1993-11-06",
+        "teamId": "692cee1ba2cd8b1fb727e1b8"
+    },
+    {
+        "firstName": "Marc",
+        "lastName": "Delorme",
+        "position": "G",
+        "jerseyNumber": 31,
+        "dateOfBirth": "1992-05-15",
+        "teamId": "692cee1ba2cd8b1fb727e1b8"
+    }
+]

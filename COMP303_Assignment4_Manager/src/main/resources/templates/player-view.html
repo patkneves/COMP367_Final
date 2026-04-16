@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Team & Player Management</title>
+    <link rel="stylesheet" th:href="@{/css/hockey.css}" />
+  </head>
+  <body>
+    <nav>
+      <a th:href="@{/teams}">View Teams</a> |
+      <a th:href="@{/players}">View Players</a>
+    </nav>
+    <h2 th:if="${player.playerId == '' || player.playerId == null}">Add Player</h2>
+    <h2 th:if="${player.playerId != '' && player.playerId != null}">Edit Player</h2>
+
+    <form th:action="@{/players}" th:object="${player}" method="post">
+      <label>First Name:</label>
+      <input th:field="*{firstName}" placeholder="First Name" required/><br />
+
+      <label>Last Name:</label>
+      <input th:field="*{lastName}" placeholder="Last Name" required/><br />
+
+      <label>Position:</label>
+      <input th:field="*{Position}" placeholder="Position" required/><br />
+
+      <label>Jersey Number:</label>
+      <input th:field="*{jerseyNumber}" type="number" placeholder="Jersey Number" required/><br />
+
+      <label>Date of Birth:</label>
+      <input th:field="*{dateOfBirth}" type="date" placeholder="YYYY-MM-DD" required/><br />
+
+      <label>Team ID:</label>
+      <select th:field="*{teamId}" required th:value="${player.teamId}"><br />
+        <option value="" disabled selected>Select Team</option>
+        <option th:each="team : ${teams}" th:value="${team.teamId}"
+        th:text="${team.teamName}"></option>
+      </select>
+      <input type="hidden" th:if="${player.playerId != '' && player.playerId != null}" th:field="*{playerId}" th:value="${player.playerId}"/>
+      <button type="submit">Save Player</button>
+    </form>
+  </body>
+</html>

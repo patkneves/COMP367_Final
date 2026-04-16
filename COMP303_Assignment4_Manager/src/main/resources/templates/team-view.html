@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Team & Player Management</title>
+    <link rel="stylesheet" th:href="@{/css/hockey.css}" />
+  </head>
+  <body>
+    <nav>
+      <a th:href="@{/teams}">View Teams</a> |
+      <a th:href="@{/players}">View Players</a>
+    </nav>
+    <h2 th:if="${team.teamId != null && team.teamId != ''}">Edit Team</h2>
+    <h2 th:if="${team.teamId == null || team.teamId == ''}">Add Team</h2>
+
+    <form th:action="@{/teams}" th:object="${team}" method="post">
+      <label>Team Name:</label>
+      <input th:field="*{teamName}" placeholder="Team Name" required /><br />
+
+      <label>City:</label>
+      <input th:field="*{cityName}" placeholder="City" required /><br />
+
+      <label>Founded Year:</label>
+      <input
+        th:field="*{foundedYear}"
+        type="number"
+        placeholder="Founded Year"
+        required
+      /><br />
+
+      <label>Coach Name:</label>
+      <input th:field="*{coachName}" placeholder="Coach Name" required /><br />
+      <input type="hidden" th:if="${team.teamId != null && team.teamId != ''}" th:field="*{teamId}" th:value="${team.teamId}"/>
+      <button type="submit">Save Team</button>
+    </form>
+  </body>
+</html>

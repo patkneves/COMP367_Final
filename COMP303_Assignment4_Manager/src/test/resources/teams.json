@@ -1,0 +1,20 @@
+[
+    {
+        "teamName": "Toronto Maple Leafs",
+        "cityName": "Toronto",
+        "foundedYear": 1917,
+        "coachName": "Sheldon Keefe"
+    },
+    {
+        "teamName": "Edmonton Oilers",
+        "cityName": "Edmonton",
+        "foundedYear": 1972,
+        "coachName": "Kris Knoblauch"
+    },
+    {
+        "teamName": "Montreal Canadiens",
+        "cityName": "Montreal",
+        "foundedYear": 1909,
+        "coachName": "Martin St. Louis"
+    }
+]

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Team & Player Management</title>
+    <link rel="stylesheet" th:href="@{/css/hockey.css}" />
+  </head>
+  <body>
+    <nav>
+      <a th:href="@{/teams}">View Teams</a> |
+      <a th:href="@{/players}">View Players</a>
+    </nav>
+    <div>
+      <h2>Players</h2>
+      <a th:href="@{/players/new}">Add New Player</a>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Team</th>
+          <th>Position</th>
+          <th>Jersey Number</th>
+          <th>Date of Birth</th>
+          <th>Age</th>
+          <th>Team ID</th>
+          <th>Actions</th>
+        </tr>
+        <tr th:each="player : ${players}">
+          <td th:text="${player.firstName + ' ' + player.lastName}"></td>
+          <td th:text="${player.teamId}"></td>
+          <td th:text="${player.position}"></td>
+          <td th:text="${player.jerseyNumber}"></td>
+          <td th:text="${player.dateOfBirth}"></td>
+          <td th:text="${player.age}"></td>
+          <td th:text="${player.teamId}"></td>
+          <td>
+            <a th:href="@{'/players/edit/' + ${player.playerId}}">Edit</a>
+            <a
+              th:href="@{'/players/delete/' + ${player.playerId}}"
+              onclick="return confirm('Are you sure?')"
+              >Delete</a
+            >
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

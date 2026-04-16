@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Team & Player Management</title>
+    <link rel="stylesheet" th:href="@{/css/hockey.css}" />
+  </head>
+  <body>
+    <nav>
+      <a th:href="@{/teams}">View Teams</a> |
+      <a th:href="@{/players}">View Players</a>
+    </nav>
+
+    <div th:fragment="content"></div>
+  </body>
+</html>

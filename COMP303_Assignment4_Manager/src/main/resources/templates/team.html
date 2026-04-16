@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Team & Player Management</title>
+    <link rel="stylesheet" th:href="@{/css/hockey.css}" />
+  </head>
+  <body>
+    <nav>
+      <a th:href="@{/teams}">View Teams</a> |
+      <a th:href="@{/players}">View Players</a>
+    </nav>
+    <h2>Teams</h2>
+    <a th:href="@{/teams/new}">Add New Team</a>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>City</th>
+        <th>Founded Year</th>
+        <th>Coach Name</th>
+        <th>Actions</th>
+      </tr>
+      <tr th:each="team : ${teams}">
+        <td th:text="${team.teamName}"></td>
+        <td th:text="${team.cityName}"></td>
+        <td th:text="${team.foundedYear}"></td>
+        <td th:text="${team.coachName}"></td>
+        <td>
+          <a th:href="@{'/teams/edit/' + ${team.teamId}}">Edit</a>
+          <a
+            th:href="@{'/teams/delete/' + ${team.teamId}}"
+            onclick="return confirm('Are you sure?')"
+            >Delete</a
+          >
+          <a th:href="@{/players/team/{id}(id=${team.teamId})}">View Players</a>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
