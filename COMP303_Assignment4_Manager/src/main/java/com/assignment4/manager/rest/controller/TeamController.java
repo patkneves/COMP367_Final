@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.assignment4.manager.model.dto.TeamStats;
 import com.assignment4.manager.model.entity.Team;
 import com.assignment4.manager.rest.service.TeamService;
 
@@ -44,6 +45,11 @@ public class TeamController {
 	public Mono<Team> getById(@PathVariable("id") final ObjectId id) {
 		System.out.println("Getting team info for id=" + id.toHexString());
 		return teams.getById(id);
+	}
+
+	@GetMapping("{id}/stats")
+	public Mono<TeamStats> getTeamStats(@PathVariable("id") final ObjectId id) {
+		return teams.getTeamStats(id);
 	}
 	
 	@PutMapping("{id}")
