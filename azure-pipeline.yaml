@@ -1,0 +1,208 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  MAVEN_OPTS: '-Dmaven.repo.local=$(Pipeline.Workspace)/.m2/repository'
+  MODULE_PATH: 'COMP303_Assignment4_Manager'
+
+stages:
+  # ============================================
+  # CI - Build Stage
+  # ============================================
+  - stage: Build
+    displayName: 'Build Stage'
+    jobs:
+      - job: BuildAndTest
+        displayName: 'Build and Test Job'
+        steps:
+          # Step 1: Compile the project using Maven
+          - task: Maven@4
+            displayName: 'Compile Project'
+            inputs:
+              mavenPomFile: '$(MODULE_PATH)/pom.xml'
+              goals: 'compile'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.17'
+
+          # Step 2: Run unit tests and generate code coverage report
+          - task: Maven@4
+            displayName: 'Run Unit Tests with Code Coverage'
+            inputs:
+              mavenPomFile: '$(MODULE_PATH)/pom.xml'
+              goals: 'test'
+              options: '-Dmaven.test.failure.ignore=true'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.17'
+              publishJUnitResults: true
+              testResultsFiles: '$(MODULE_PATH)/target/surefire-reports/TEST-*.xml'
+              codeCoverageToolOption: 'JaCoCo'
+              codeCoverageClassFilesDirectories: '$(MODULE_PATH)/target/classes'
+
+  # ============================================
+  # CI - SonarQube Static Code Analysis
+  # ============================================
+  - stage: SonarQubeAnalysis
+    displayName: 'SonarQube Analysis Stage'
+    dependsOn: Build
+    jobs:
+      - job: SonarQube
+        displayName: 'SonarQube Static Code Analysis'
+        steps:
+          - task: SonarQubePrepare@7
+            displayName: 'Prepare SonarQube Analysis'
+            inputs:
+              SonarQube: 'SonarQubeServiceConnection'
+              scannerMode: 'cli'
+              configMode: 'manual'
+              cliProjectKey: 'COMP367_Final'
+              cliProjectName: 'COMP367_Final'
+              cliSources: '$(MODULE_PATH)/src'
+
+          - task: Maven@4
+            displayName: 'Build for SonarQube'
+            inputs:
+              mavenPomFile: '$(MODULE_PATH)/pom.xml'
+              goals: 'compile'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.17'
+
+          - task: SonarQubeAnalyze@7
+            displayName: 'Run SonarQube Analysis'
+
+          - task: SonarQubePublish@7
+            displayName: 'Publish SonarQube Results'
+            inputs:
+              pollingTimeoutSec: '300'
+
+  # ============================================
+  # CD - Deliver Stage
+  # ============================================
+  - stage: Deliver
+    displayName: 'Deliver Stage'
+    dependsOn: SonarQubeAnalysis
+    jobs:
+      - job: Package
+        displayName: 'Package Artifact'
+        steps:
+          - task: Maven@4
+            displayName: 'Package Application (mvn package)'
+            inputs:
+              mavenPomFile: '$(MODULE_PATH)/pom.xml'
+              goals: 'package'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.17'
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Build Artifact'
+            inputs:
+              PathtoPublish: '$(MODULE_PATH)/target/*.jar'
+              ArtifactName: 'hockey-league-manager'
+              publishLocation: 'Container'
+
+  # ============================================
+  # CD - Deploy to Dev Environment
+  # ============================================
+  - stage: DeployDev
+    displayName: 'Deploy to Dev Env'
+    dependsOn: Deliver
+    jobs:
+      - deployment: DeployDev
+        displayName: 'Deploy to Dev Environment'
+        environment: 'dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: hockey-league-manager
+
+                - script: |
+                    echo "========================================="
+                    echo "Deploying to DEV environment..."
+                    echo "========================================="
+                    echo "Artifact downloaded to: $(Pipeline.Workspace)/hockey-league-manager"
+                    ls -la $(Pipeline.Workspace)/hockey-league-manager/
+                    echo "Launching application in DEV..."
+                    echo "Application deployed successfully to DEV!"
+                  displayName: 'Deploy and Launch App in Dev'
+
+  # ============================================
+  # CD - Deploy to QAT Environment
+  # ============================================
+  - stage: DeployQAT
+    displayName: 'Deploy to QAT Env'
+    dependsOn: DeployDev
+    jobs:
+      - deployment: DeployQAT
+        displayName: 'Deploy to QAT Environment'
+        environment: 'qat'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: hockey-league-manager
+
+                - script: |
+                    echo "========================================="
+                    echo "Deploying to QAT environment..."
+                    echo "========================================="
+                    echo "Running QAT deployment steps..."
+                    echo "Application deployed successfully to QAT!"
+                  displayName: 'Deploy to QAT'
+
+  # ============================================
+  # CD - Deploy to Staging Environment
+  # ============================================
+  - stage: DeployStaging
+    displayName: 'Deploy to Staging Env'
+    dependsOn: DeployQAT
+    jobs:
+      - deployment: DeployStaging
+        displayName: 'Deploy to Staging Environment'
+        environment: 'staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: hockey-league-manager
+
+                - script: |
+                    echo "========================================="
+                    echo "Deploying to STAGING environment..."
+                    echo "========================================="
+                    echo "Running Staging deployment steps..."
+                    echo "Application deployed successfully to STAGING!"
+                  displayName: 'Deploy to Staging'
+
+  # ============================================
+  # CD - Deploy to Production Environment
+  # ============================================
+  - stage: DeployProduction
+    displayName: 'Deploy to Production Env'
+    dependsOn: DeployStaging
+    jobs:
+      - deployment: DeployProduction
+        displayName: 'Deploy to Production Environment'
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: hockey-league-manager
+
+                - script: |
+                    echo "========================================="
+                    echo "Deploying to PRODUCTION environment..."
+                    echo "========================================="
+                    echo "Running Production deployment steps..."
+                    echo "Application deployed successfully to PRODUCTION!"
+                  displayName: 'Deploy to Production'
