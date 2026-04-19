@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.assignment4.manager.model.entity.Player;
 import com.assignment4.manager.rest.service.PlayerService;
@@ -50,6 +51,25 @@ public class PlayerController {
 	public Flux<Player> getByTeam(@PathVariable("id") final ObjectId id) {
 		System.out.println("Getting player info for teamId=" + id.toHexString());
 		return players.getByTeam(id);
+	}
+
+	@GetMapping("/search")
+	public Flux<Player> searchByName(
+			@RequestParam(required = false) final String firstName,
+			@RequestParam(required = false) final String lastName) {
+		return players.searchByName(firstName, lastName);
+	}
+
+	@GetMapping("/position/{position}")
+	public Flux<Player> getByPosition(@PathVariable("position") final String position) {
+		return players.getByPosition(position);
+	}
+
+	@GetMapping("/age-range")
+	public Flux<Player> getByAgeRange(
+			@RequestParam final int minAge,
+			@RequestParam final int maxAge) {
+		return players.getByAgeRange(minAge, maxAge);
 	}
 	
 	@PutMapping("{id}")
