@@ -39,6 +39,33 @@ public class PlayerService {
 	public Flux<Player> getByTeam(final ObjectId teamId) {
 		return players.findByTeamId(teamId).switchIfEmpty(Flux.empty());
 	}
+
+	public Flux<Player> searchByName(final String firstName, final String lastName) {
+		return players.findAll()
+			.filter(player -> {
+				boolean matches = true;
+				if (firstName != null && !firstName.isEmpty()) {
+					matches = player.getFirstName().toLowerCase().contains(firstName.toLowerCase());
+				}
+				if (lastName != null && !lastName.isEmpty()) {
+					matches = matches && player.getLastName().toLowerCase().contains(lastName.toLowerCase());
+				}
+				return matches;
+			});
+	}
+
+	public Flux<Player> getByPosition(final String position) {
+		return players.findAll()
+			.filter(player -> player.getPosition().equalsIgnoreCase(position));
+	}
+
+	public Flux<Player> getByAgeRange(final int minAge, final int maxAge) {
+		return players.findAll()
+			.filter(player -> {
+				int age = player.getAge();
+				return age >= minAge && age <= maxAge;
+			});
+	}
 	
 	public Mono<Player> update(final ObjectId playerId, final Player player) {
 		player.setPlayerId(playerId);
