@@ -109,26 +109,27 @@ stages:
     displayName: 'Deploy to Dev Env'
     dependsOn: Deliver
     jobs:
-      - deployment: DeployDev
+      - job: DeployDev
         displayName: 'Deploy to Dev Environment'
-        environment: 'dev'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - download: current
-                  artifact: hockey-league-manager
+        steps:
+          - task: DownloadBuildArtifacts@1
+            displayName: 'Download Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'hockey-league-manager'
+              downloadPath: '$(System.ArtifactsDirectory)'
 
-                - script: |
-                    echo "========================================="
-                    echo "Deploying to DEV environment..."
-                    echo "========================================="
-                    echo "Artifact downloaded to: $(Pipeline.Workspace)/hockey-league-manager"
-                    ls -la $(Pipeline.Workspace)/hockey-league-manager/
-                    echo "Launching application in DEV..."
-                    echo "java -jar hockey-league-manager.jar --spring.profiles.active=dev"
-                    echo "Application deployed successfully to DEV!"
-                  displayName: 'Deploy and Launch App in Dev'
+          - script: |
+              echo "========================================="
+              echo "Deploying to DEV environment..."
+              echo "========================================="
+              echo "Artifact downloaded to: $(System.ArtifactsDirectory)/hockey-league-manager"
+              ls -la $(System.ArtifactsDirectory)/hockey-league-manager/
+              echo "Launching application in DEV..."
+              echo "java -jar hockey-league-manager.jar --spring.profiles.active=dev"
+              echo "Application deployed successfully to DEV!"
+            displayName: 'Deploy and Launch App in Dev'
 
   # ============================================
   # CD - Deploy to QAT Environment
@@ -137,23 +138,24 @@ stages:
     displayName: 'Deploy to QAT Env'
     dependsOn: DeployDev
     jobs:
-      - deployment: DeployQAT
+      - job: DeployQAT
         displayName: 'Deploy to QAT Environment'
-        environment: 'qat'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - download: current
-                  artifact: hockey-league-manager
+        steps:
+          - task: DownloadBuildArtifacts@1
+            displayName: 'Download Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'hockey-league-manager'
+              downloadPath: '$(System.ArtifactsDirectory)'
 
-                - script: |
-                    echo "========================================="
-                    echo "Deploying to QAT environment..."
-                    echo "========================================="
-                    echo "Running QAT deployment steps..."
-                    echo "Application deployed successfully to QAT!"
-                  displayName: 'Deploy to QAT'
+          - script: |
+              echo "========================================="
+              echo "Deploying to QAT environment..."
+              echo "========================================="
+              echo "Running QAT deployment steps..."
+              echo "Application deployed successfully to QAT!"
+            displayName: 'Deploy to QAT'
 
   # ============================================
   # CD - Deploy to Staging Environment
@@ -162,23 +164,24 @@ stages:
     displayName: 'Deploy to Staging Env'
     dependsOn: DeployQAT
     jobs:
-      - deployment: DeployStaging
+      - job: DeployStaging
         displayName: 'Deploy to Staging Environment'
-        environment: 'staging'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - download: current
-                  artifact: hockey-league-manager
+        steps:
+          - task: DownloadBuildArtifacts@1
+            displayName: 'Download Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'hockey-league-manager'
+              downloadPath: '$(System.ArtifactsDirectory)'
 
-                - script: |
-                    echo "========================================="
-                    echo "Deploying to STAGING environment..."
-                    echo "========================================="
-                    echo "Running Staging deployment steps..."
-                    echo "Application deployed successfully to STAGING!"
-                  displayName: 'Deploy to Staging'
+          - script: |
+              echo "========================================="
+              echo "Deploying to STAGING environment..."
+              echo "========================================="
+              echo "Running Staging deployment steps..."
+              echo "Application deployed successfully to STAGING!"
+            displayName: 'Deploy to Staging'
 
   # ============================================
   # CD - Deploy to Production Environment
@@ -187,20 +190,21 @@ stages:
     displayName: 'Deploy to Production Env'
     dependsOn: DeployStaging
     jobs:
-      - deployment: DeployProduction
+      - job: DeployProduction
         displayName: 'Deploy to Production Environment'
-        environment: 'production'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - download: current
-                  artifact: hockey-league-manager
+        steps:
+          - task: DownloadBuildArtifacts@1
+            displayName: 'Download Artifact'
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'hockey-league-manager'
+              downloadPath: '$(System.ArtifactsDirectory)'
 
-                - script: |
-                    echo "========================================="
-                    echo "Deploying to PRODUCTION environment..."
-                    echo "========================================="
-                    echo "Running Production deployment steps..."
-                    echo "Application deployed successfully to PRODUCTION!"
-                  displayName: 'Deploy to Production'
+          - script: |
+              echo "========================================="
+              echo "Deploying to PRODUCTION environment..."
+              echo "========================================="
+              echo "Running Production deployment steps..."
+              echo "Application deployed successfully to PRODUCTION!"
+            displayName: 'Deploy to Production'
