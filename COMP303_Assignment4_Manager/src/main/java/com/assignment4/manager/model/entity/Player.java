@@ -6,6 +6,8 @@ import java.time.Period;
 import java.time.format.DateTimeParseException;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,6 +24,9 @@ import lombok.ToString;
 @Document(collection = "players")
 @ToString
 public class Player {
+
+    private static final Logger logger = LoggerFactory.getLogger(Player.class);
+
     @Id
     private ObjectId playerId;
 	@NotNull
@@ -101,12 +106,8 @@ public class Player {
 		try {
 			bdate = LocalDate.parse(dateOfBirth);
 		} catch (DateTimeParseException e) {
-			// Log error and return 0 if date parsing fails (invalid format)
-			System.err.println("Could not parse date "
-			 + e.getParsedString()
-			  + " for player "
-			   + firstName + " " + lastName
-				+ " ID: " + getPlayerId());
+			logger.warn("Invalid date of birth format for player {} {} (ID: {}). Received: {}",
+				firstName, lastName, getPlayerId(), e.getParsedString(), e);
 			return 0;
 		}
 		age = Period.between(bdate, now).getYears();
