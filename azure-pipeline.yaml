@@ -52,18 +52,8 @@ stages:
       - job: SonarQube
         displayName: 'SonarQube Static Code Analysis'
         steps:
-          - task: SonarQubePrepare@7
-            displayName: 'Prepare SonarQube Analysis'
-            inputs:
-              SonarQube: 'SonarQubeServiceConnection'
-              scannerMode: 'cli'
-              configMode: 'manual'
-              cliProjectKey: 'COMP367_Final'
-              cliProjectName: 'COMP367_Final'
-              cliSources: '$(MODULE_PATH)/src'
-
           - task: Maven@4
-            displayName: 'Build for SonarQube'
+            displayName: 'Build for Analysis'
             inputs:
               mavenPomFile: '$(MODULE_PATH)/pom.xml'
               goals: 'compile'
@@ -71,13 +61,20 @@ stages:
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.17'
 
-          - task: SonarQubeAnalyze@7
-            displayName: 'Run SonarQube Analysis'
-
-          - task: SonarQubePublish@7
-            displayName: 'Publish SonarQube Results'
-            inputs:
-              pollingTimeoutSec: '300'
+          - script: |
+              echo "========================================="
+              echo "Running SonarCloud Static Code Analysis"
+              echo "========================================="
+              export JAVA_HOME=$JAVA_HOME_17_X64
+              cd $(MODULE_PATH)
+              mvn sonar:sonar \
+                -Dsonar.projectKey=patkneves_COMP367_Final \
+                -Dsonar.organization=patkneves \
+                -Dsonar.host.url=https://sonarcloud.io \
+                -Dsonar.token=54c5222f587860848540ad0907ba1d47c2c87b1b \
+                -Dsonar.java.binaries=target/classes
+              echo "SonarCloud analysis complete!"
+            displayName: 'Run SonarCloud Analysis'
 
   # ============================================
   # CD - Deliver Stage
@@ -101,7 +98,7 @@ stages:
           - task: PublishBuildArtifacts@1
             displayName: 'Publish Build Artifact'
             inputs:
-              PathtoPublish: '$(MODULE_PATH)/target/*.jar'
+              PathtoPublish: '$(MODULE_PATH)/target'
               ArtifactName: 'hockey-league-manager'
               publishLocation: 'Container'
 
@@ -129,6 +126,7 @@ stages:
                     echo "Artifact downloaded to: $(Pipeline.Workspace)/hockey-league-manager"
                     ls -la $(Pipeline.Workspace)/hockey-league-manager/
                     echo "Launching application in DEV..."
+                    echo "java -jar hockey-league-manager.jar --spring.profiles.active=dev"
                     echo "Application deployed successfully to DEV!"
                   displayName: 'Deploy and Launch App in Dev'
 
