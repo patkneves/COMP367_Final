@@ -2,7 +2,6 @@
 package com.assignment4.manager.rest.service;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,13 +80,8 @@ public class PlayerService {
 	}
 	
 	public Mono<Player> delete(final ObjectId id) {
-		final Mono<Player> dbMatch = getById(id);
-		if (Objects.isNull(dbMatch)) {
-			return Mono.empty();
-		}
 		return getById(id)
-				.switchIfEmpty(Mono.empty())
-				.filter(Objects::nonNull)
-				.flatMap(matchToBeDeleted -> players.delete(matchToBeDeleted).then(Mono.just(matchToBeDeleted)));
+			.flatMap(playerToDelete -> players.delete(playerToDelete)
+				.then(Mono.just(playerToDelete)));
 	}
 }

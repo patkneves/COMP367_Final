@@ -2,7 +2,6 @@
 package com.assignment4.manager.rest.service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
@@ -82,13 +81,8 @@ public class TeamService {
 	}
 	
 	public Mono<Team> delete(final ObjectId id) {
-		final Mono<Team> dbMatch = getById(id);
-		if (Objects.isNull(dbMatch)) {
-			return Mono.empty();
-		}
 		return getById(id)
-				.switchIfEmpty(Mono.empty())
-				.filter(Objects::nonNull)
-				.flatMap(matchToBeDeleted -> teams.delete(matchToBeDeleted).then(Mono.just(matchToBeDeleted)));
+			.flatMap(teamToDelete -> teams.delete(teamToDelete)
+				.then(Mono.just(teamToDelete)));
 	}
 }
